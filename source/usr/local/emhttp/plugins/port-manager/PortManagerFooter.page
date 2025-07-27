@@ -1,6 +1,7 @@
+Menu="OtherSettings"
+---
 <script>
 function PortManagerButton() {
-    // Open Port Manager in a new popup window
     var width = Math.min(screen.availWidth, 1400);
     var height = Math.min(screen.availHeight, 900);
     var top = (screen.height - height) / 2;

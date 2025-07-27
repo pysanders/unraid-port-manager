@@ -2,16 +2,31 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "port-manager">
 <!ENTITY author    "Nathan Sanders">
-<!ENTITY version   "2025.07.27o">
+<!ENTITY version   "2025.07.27q">
 <!ENTITY launch    "Tools/PortManager">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
-<!ENTITY md5       "28aa30d2dd31f0522232fc920f14acc5">
+<!ENTITY md5       "f64add02dd715d8da35353ea1ebe6ac8">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="hexagon-nodes-solid-full" support="https://github.com/pysanders/unraid-port-manager/issues" min="6.9.0">
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="/plugins/port-manager/images/hexagon-nodes-solid-full.png" support="https://github.com/pysanders/unraid-port-manager/issues" min="6.9.0">
+
+<DESCRIPTION>
+A comprehensive port management plugin that displays all ports in use across your Unraid system including Docker containers, VMs, and system services. Features search functionality and port suggestion capabilities.
+</DESCRIPTION>
 
 <CHANGES>
+###2025.07.27q
+- Added plugin description for Plugin Manager
+- Added custom PNG icon in images folder
+- Updated icon references to use custom hexagon-nodes icon
+- Fixed plugin metadata display
+
+###2025.07.27p
+- Fixed PortManagerIcon.page to show icon only
+- Updated footer page structure with proper Menu header
+- Corrected icon references
+
 ###2025.07.27o
 - Fixed toolbar button integration 
 - Updated footer page structure for proper loading
