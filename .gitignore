@@ -1,7 +1,7 @@
 # Build artifacts
-*.txz
-*.txz.md5
 package/
+# Allow the release package
+!port-manager-2025.07.27-x86_64-1.txz
 
 # IDE files
 .vscode/

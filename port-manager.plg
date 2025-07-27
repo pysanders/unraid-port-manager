@@ -6,7 +6,7 @@
 <!ENTITY launch    "Settings/PortManager">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
-<!ENTITY md5       "$(cat &name;.txz | md5sum | cut -d' ' -f1)">
+<!ENTITY md5       "c843e4696d8c0425ed9e424112ee06c1">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="ports" min="6.9.0">
