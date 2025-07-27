@@ -2,11 +2,11 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "port-manager">
 <!ENTITY author    "Nathan Sanders">
-<!ENTITY version   "2025.07.27">
+<!ENTITY version   "2025.07.27a">
 <!ENTITY launch    "Settings/PortManager">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
-<!ENTITY md5       "e1b614daa2c0426e580b4cc2ddf570b2">
+<!ENTITY md5       "b0abed38eceb6bce26a207c08e69ffa3">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="ports" min="6.9.0">
