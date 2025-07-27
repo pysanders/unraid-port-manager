@@ -1,0 +1,347 @@
+<?PHP
+/* Copyright 2025, Nathan Sanders.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License version 2,
+ * as published by the Free Software Foundation.
+ */
+?>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Port Manager</title>
+    <meta charset="utf-8">
+    <link type="text/css" rel="stylesheet" href="/webGui/styles/default-fonts.css">
+    <link type="text/css" rel="stylesheet" href="/webGui/styles/default-popup.css">
+    <link type="text/css" rel="stylesheet" href="/webGui/styles/default-choice.css">
+    <link type="text/css" rel="stylesheet" href="/webGui/styles/default-page.css">
+    <style>
+        .port-manager-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .search-controls {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .search-input {
+            flex: 1;
+            min-width: 200px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .filter-select {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .suggest-button, .refresh-button {
+            background: #337ab7;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .suggest-button:hover, .refresh-button:hover {
+            background: #286090;
+        }
+        
+        .port-suggest-result {
+            margin-left: 10px;
+            padding: 8px 12px;
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+            color: #155724;
+            font-weight: bold;
+        }
+        
+        .ports-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .ports-table th {
+            background: #337ab7;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .ports-table td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .ports-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .port-type-docker { color: #007bff; }
+        .port-type-vm { color: #28a745; }
+        .port-type-system { color: #dc3545; }
+        
+        .port-status-active { color: #28a745; font-weight: bold; }
+        .port-status-listening { color: #17a2b8; font-weight: bold; }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+        
+        .stats-container {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="port-manager-container">
+        <h1>Port Manager</h1>
+        <p>View and manage all ports in use across your Unraid system including Docker containers, VMs, and system services.</p>
+        
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number" id="docker-count">-</div>
+                <div class="stat-label">Docker Ports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="vm-count">-</div>
+                <div class="stat-label">VM Ports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="system-count">-</div>
+                <div class="stat-label">System Ports</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="total-count">-</div>
+                <div class="stat-label">Total Ports</div>
+            </div>
+        </div>
+        
+        <div class="search-controls">
+            <input type="text" class="search-input" id="search-input" placeholder="Search ports, services, or IP addresses...">
+            <select class="filter-select" id="category-filter">
+                <option value="all">All Categories</option>
+                <option value="docker">Docker Only</option>
+                <option value="vms">VMs Only</option>
+                <option value="system">System Only</option>
+            </select>
+            <button class="refresh-button" onclick="loadPorts()">Refresh</button>
+            <button class="suggest-button" onclick="suggestPort()">Suggest Port</button>
+            <span id="suggested-port-result"></span>
+        </div>
+        
+        <div id="ports-content">
+            <div class="loading">Loading port information...</div>
+        </div>
+    </div>
+
+    <script>
+        let allPorts = [];
+        let filteredPorts = [];
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPorts();
+            
+            document.getElementById('search-input').addEventListener('input', filterPorts);
+            document.getElementById('category-filter').addEventListener('change', filterPorts);
+        });
+        
+        function loadPorts() {
+            fetch('api.php?action=getAllPorts')
+                .then(response => response.json())
+                .then(data => {
+                    allPorts = [];
+                    
+                    if (data.docker) {
+                        allPorts = allPorts.concat(data.docker);
+                    }
+                    if (data.vms) {
+                        allPorts = allPorts.concat(data.vms);
+                    }
+                    if (data.system) {
+                        allPorts = allPorts.concat(data.system);
+                    }
+                    
+                    updateStats(data);
+                    filterPorts();
+                })
+                .catch(error => {
+                    console.error('Error loading ports:', error);
+                    document.getElementById('ports-content').innerHTML = 
+                        '<div class="no-results">Error loading port information. Please try refreshing the page.</div>';
+                });
+        }
+        
+        function updateStats(data) {
+            document.getElementById('docker-count').textContent = data.docker ? data.docker.length : 0;
+            document.getElementById('vm-count').textContent = data.vms ? data.vms.length : 0;
+            document.getElementById('system-count').textContent = data.system ? data.system.length : 0;
+            document.getElementById('total-count').textContent = allPorts.length;
+        }
+        
+        function filterPorts() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const category = document.getElementById('category-filter').value;
+            
+            filteredPorts = allPorts.filter(port => {
+                const matchesCategory = category === 'all' || port.type === category;
+                const matchesSearch = searchTerm === '' || 
+                    port.service.toLowerCase().includes(searchTerm) ||
+                    port.host_port.toString().includes(searchTerm) ||
+                    port.host_ip.toLowerCase().includes(searchTerm) ||
+                    port.protocol.toLowerCase().includes(searchTerm);
+                
+                return matchesCategory && matchesSearch;
+            });
+            
+            renderPortsTable();
+        }
+        
+        function renderPortsTable() {
+            const content = document.getElementById('ports-content');
+            
+            if (filteredPorts.length === 0) {
+                content.innerHTML = '<div class="no-results">No ports found matching your criteria.</div>';
+                return;
+            }
+            
+            let html = `
+                <table class="ports-table">
+                    <thead>
+                        <tr>
+                            <th>Service</th>
+                            <th>Type</th>
+                            <th>Host IP</th>
+                            <th>Host Port</th>
+                            <th>Internal Port</th>
+                            <th>Protocol</th>
+                            <th>Status</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            filteredPorts.forEach(port => {
+                html += `
+                    <tr>
+                        <td>${escapeHtml(port.service)}</td>
+                        <td><span class="port-type-${port.type}">${port.type.toUpperCase()}</span></td>
+                        <td>${escapeHtml(port.host_ip)}</td>
+                        <td><strong>${port.host_port}</strong></td>
+                        <td>${port.container_port}</td>
+                        <td>${port.protocol.toUpperCase()}</td>
+                        <td><span class="port-status-${port.status}">${port.status}</span></td>
+                        <td>${getPortDetails(port)}</td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody></table>';
+            content.innerHTML = html;
+        }
+        
+        function getPortDetails(port) {
+            let details = [];
+            
+            if (port.process) {
+                details.push(`Process: ${escapeHtml(port.process)}`);
+            }
+            if (port.scope) {
+                details.push(`Scope: ${escapeHtml(port.scope)}`);
+            }
+            if (port.description) {
+                details.push(`Description: ${escapeHtml(port.description)}`);
+            }
+            
+            return details.join('<br>');
+        }
+        
+        function suggestPort() {
+            const startPort = prompt('Start port range (default: 8080):', '8080');
+            const endPort = prompt('End port range (default: 9999):', '9999');
+            
+            if (startPort && endPort) {
+                fetch(`api.php?action=suggestPort&start=${startPort}&end=${endPort}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultElement = document.getElementById('suggested-port-result');
+                        if (data.suggested_port) {
+                            resultElement.innerHTML = `<span class="port-suggest-result">Suggested: ${data.suggested_port}</span>`;
+                        } else {
+                            resultElement.innerHTML = `<span class="port-suggest-result" style="background: #f8d7da; border-color: #f5c6cb; color: #721c24;">No available ports in range</span>`;
+                        }
+                        
+                        setTimeout(() => {
+                            resultElement.innerHTML = '';
+                        }, 5000);
+                    })
+                    .catch(error => {
+                        console.error('Error suggesting port:', error);
+                    });
+            }
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>

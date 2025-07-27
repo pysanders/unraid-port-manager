@@ -1,0 +1,22 @@
+Port Manager Plugin for Unraid
+
+This plugin provides a comprehensive view of all ports in use across your Unraid system.
+
+Features:
+- Docker container port scanning
+- Virtual machine port detection  
+- System service port monitoring
+- Search and filtering capabilities
+- Port suggestion for new applications
+- Real-time port status monitoring
+
+Installation:
+1. Install via Community Applications
+2. Or manually install the .plg file
+3. Access via Settings > Port Manager
+
+The plugin scans Docker containers, VMs, and system services to provide
+a complete overview of port usage on your Unraid server.
+
+Copyright 2025, Nathan Sanders
+Licensed under GPL v2.0

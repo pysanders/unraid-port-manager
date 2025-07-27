@@ -1,0 +1,78 @@
+<?xml version='1.0' standalone='yes'?>
+<!DOCTYPE PLUGIN [
+<!ENTITY name      "port-manager">
+<!ENTITY author    "Nathan Sanders">
+<!ENTITY version   "2025.07.27">
+<!ENTITY launch    "Settings/PortManager">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/nathansanders/unraid-port-manager/main">
+<!ENTITY pluginURL "&gitURL;/port-manager.plg">
+<!ENTITY md5       "$(cat &name;.txz | md5sum | cut -d' ' -f1)">
+]>
+
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="ports" min="6.9.0">
+
+<CHANGES>
+###2025.07.27
+- Initial release
+- Port scanning for Docker containers, VMs, and system services
+- Search and filtering capabilities
+- Port suggestion feature for new applications
+- Real-time port status monitoring
+</CHANGES>
+
+<!--
+Port Manager Plugin for Unraid
+This plugin provides a comprehensive view of all ports in use across your Unraid system,
+including Docker containers, VMs, and system services. It includes search functionality
+and can suggest available ports for new applications.
+-->
+
+<FILE Run="/bin/bash">
+<INLINE>
+# Remove old 'source' files
+rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|head -n -1)
+</INLINE>
+</FILE>
+
+<!--
+The 'source' file.
+-->
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;-x86_64-1.txz" Run="upgradepkg --install-new">
+<URL>&gitURL;/&name;-&version;-x86_64-1.txz</URL>
+<MD5>&md5;</MD5>
+</FILE>
+
+<!--
+The 'post-install' script
+-->
+<FILE Run="/bin/bash">
+<INLINE>
+echo ""
+echo "----------------------------------------------------"
+echo " &name; has been installed."
+echo " Copyright 2025, &author;"
+echo " Version: &version;"
+echo "----------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+<!--
+The 'remove' script.
+-->
+<FILE Run="/bin/bash" Method="remove">
+<INLINE>
+removepkg &name;-&version;-x86_64-1 --terse
+rm -rf /usr/local/emhttp/plugins/&name;
+rm -rf /boot/config/plugins/&name;
+
+echo ""
+echo "----------------------------------------------------"
+echo " &name; has been removed."
+echo " Version: &version;"
+echo "----------------------------------------------------"
+echo ""
+</INLINE>
+</FILE>
+
+</PLUGIN>
