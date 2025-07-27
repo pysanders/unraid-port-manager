@@ -1,6 +1,6 @@
-Menu="Settings"
+Menu="Tools"
 Title="Port Manager"
-Icon="ports"
+Icon="port-manager"
 ---
 <?PHP
 /* Copyright 2025, Nathan Sanders.
@@ -12,4 +12,5 @@ Icon="ports"
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
  */
+require_once 'PortManager.php';
 ?>

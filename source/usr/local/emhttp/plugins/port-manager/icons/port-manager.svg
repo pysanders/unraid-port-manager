@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <rect width="48" height="48" rx="8" fill="#2563eb"/>
+  <g fill="white">
+    <!-- Router/Network icon -->
+    <rect x="10" y="14" width="28" height="20" rx="4" stroke="white" stroke-width="2" fill="none"/>
+    <!-- Ports -->
+    <rect x="12" y="18" width="3" height="3" fill="white"/>
+    <rect x="17" y="18" width="3" height="3" fill="white"/>
+    <rect x="22" y="18" width="3" height="3" fill="white"/>
+    <rect x="27" y="18" width="3" height="3" fill="white"/>
+    <rect x="32" y="18" width="3" height="3" fill="white"/>
+    
+    <rect x="12" y="23" width="3" height="3" fill="white"/>
+    <rect x="17" y="23" width="3" height="3" fill="white"/>
+    <rect x="22" y="23" width="3" height="3" fill="white"/>
+    <rect x="27" y="23" width="3" height="3" fill="white"/>
+    <rect x="32" y="23" width="3" height="3" fill="white"/>
+    
+    <rect x="12" y="28" width="3" height="3" fill="white"/>
+    <rect x="17" y="28" width="3" height="3" fill="white"/>
+    <rect x="22" y="28" width="3" height="3" fill="white"/>
+    <rect x="27" y="28" width="3" height="3" fill="white"/>
+    <rect x="32" y="28" width="3" height="3" fill="white"/>
+  </g>
+</svg>

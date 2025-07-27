@@ -1,7 +1,7 @@
 # Build artifacts
 package/
 # Allow the release package
-!port-manager-2025.07.27a-x86_64-1.txz
+!port-manager-2025.07.27b-x86_64-1.txz
 
 # IDE files
 .vscode/
