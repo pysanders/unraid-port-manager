@@ -13,17 +13,27 @@ echo "<h2>PHP Test</h2>";
 echo "<p>PHP is working! Current time: " . date('Y-m-d H:i:s') . "</p>";
 echo "<p>Plugin directory: " . __DIR__ . "</p>";
 
-// Test file existence
-if (file_exists('api.php')) {
-    echo "<p style='color: green;'>✓ api.php exists</p>";
+// Test full paths
+$plugin_dir = '/usr/local/emhttp/plugins/port-manager';
+echo "<p>Expected plugin directory: $plugin_dir</p>";
+
+if (file_exists("$plugin_dir/api.php")) {
+    echo "<p style='color: green;'>✓ api.php exists at full path</p>";
 } else {
-    echo "<p style='color: red;'>✗ api.php missing</p>";
+    echo "<p style='color: red;'>✗ api.php missing at full path</p>";
 }
 
-if (file_exists('include/port_scanner.php')) {
-    echo "<p style='color: green;'>✓ port_scanner.php exists</p>";
+if (file_exists("$plugin_dir/include/port_scanner.php")) {
+    echo "<p style='color: green;'>✓ port_scanner.php exists at full path</p>";
 } else {
-    echo "<p style='color: red;'>✗ port_scanner.php missing</p>";
+    echo "<p style='color: red;'>✗ port_scanner.php missing at full path</p>";
+}
+
+// Check if we're in the right directory
+if (__DIR__ !== $plugin_dir) {
+    echo "<p style='color: orange;'>⚠ PHP running from wrong directory!</p>";
+    echo "<p>Current: " . __DIR__ . "</p>";
+    echo "<p>Expected: $plugin_dir</p>";
 }
 ?>
     
