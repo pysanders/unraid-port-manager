@@ -1,6 +1,4 @@
-Menu="Tools:Unraid OS"
 Title="Port Manager"
-Icon="network-wired"
 ---
 <?PHP
 /* Copyright 2025, Nathan Sanders. */
@@ -65,11 +63,10 @@ let allPorts = [];
 let filteredPorts = [];
 
 document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('js-status').textContent = 'JavaScript loaded successfully';
-    document.getElementById('js-status').style.color = 'green';
-    
     console.log('Port Manager: DOM loaded, starting initialization...');
-    loadPorts();
+    
+    // Auto-load ports when page loads
+    setTimeout(loadPorts, 500);
     
     document.getElementById('search-input').addEventListener('input', filterPorts);
     document.getElementById('category-filter').addEventListener('change', filterPorts);
@@ -119,12 +116,18 @@ function filterPorts() {
     const category = document.getElementById('category-filter').value;
     
     filteredPorts = allPorts.filter(port => {
-        const matchesCategory = category === 'all' || port.type === category;
+        // Fix category matching - convert 'vms' to 'vm' to match port.type
+        let categoryMatch = category;
+        if (category === 'vms') categoryMatch = 'vm';
+        
+        const matchesCategory = category === 'all' || port.type === categoryMatch;
         const matchesSearch = searchTerm === '' || 
             port.service.toLowerCase().includes(searchTerm) ||
             port.host_port.toString().includes(searchTerm) ||
             port.host_ip.toLowerCase().includes(searchTerm) ||
-            port.protocol.toLowerCase().includes(searchTerm);
+            port.protocol.toLowerCase().includes(searchTerm) ||
+            (port.process && port.process.toLowerCase().includes(searchTerm)) ||
+            (port.description && port.description.toLowerCase().includes(searchTerm));
         
         return matchesCategory && matchesSearch;
     });
@@ -202,28 +205,29 @@ function getPortDetails(port) {
 }
 
 function suggestPort() {
-    const startPort = prompt('Start port range (default: 8080):', '8080');
-    const endPort = prompt('End port range (default: 9999):', '9999');
-    
-    if (startPort && endPort) {
-        fetch('/plugins/port-manager/api.php?action=suggestPort&start=' + startPort + '&end=' + endPort)
-            .then(response => response.json())
-            .then(data => {
-                const resultElement = document.getElementById('suggested-port-result');
-                if (data.suggested_port) {
-                    resultElement.innerHTML = '<span style="margin-left: 10px; padding: 8px 12px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724; font-weight: bold;">Suggested: ' + data.suggested_port + '</span>';
-                } else {
-                    resultElement.innerHTML = '<span style="margin-left: 10px; padding: 8px 12px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24; font-weight: bold;">No available ports in range</span>';
-                }
-                
-                setTimeout(() => {
-                    resultElement.innerHTML = '';
-                }, 5000);
-            })
-            .catch(error => {
-                console.error('Error suggesting port:', error);
-            });
-    }
+    // Use fixed range 5000-9999 and find a random available port
+    fetch('/plugins/port-manager/api.php?action=suggestPort&start=5000&end=9999')
+        .then(response => response.json())
+        .then(data => {
+            const resultElement = document.getElementById('suggested-port-result');
+            if (data.suggested_port) {
+                resultElement.innerHTML = '<span style="margin-left: 10px; padding: 8px 12px; background: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724; font-weight: bold;">Suggested Port: ' + data.suggested_port + '</span>';
+            } else {
+                resultElement.innerHTML = '<span style="margin-left: 10px; padding: 8px 12px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24; font-weight: bold;">No available ports in range 5000-9999</span>';
+            }
+            
+            setTimeout(() => {
+                resultElement.innerHTML = '';
+            }, 8000);
+        })
+        .catch(error => {
+            console.error('Error suggesting port:', error);
+            const resultElement = document.getElementById('suggested-port-result');
+            resultElement.innerHTML = '<span style="margin-left: 10px; padding: 8px 12px; background: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24; font-weight: bold;">Error suggesting port</span>';
+            setTimeout(() => {
+                resultElement.innerHTML = '';
+            }, 5000);
+        });
 }
 
 function escapeHtml(text) {

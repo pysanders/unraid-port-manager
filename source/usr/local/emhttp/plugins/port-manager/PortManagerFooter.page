@@ -1,0 +1,40 @@
+<!--
+##############################
+plugins/port-manager/PortManagerFooter.page  
+##############################
+-->
+
+<style>
+.nav-item.PortManagerButton {
+    display: inline-block;
+}
+</style>
+
+<script>
+function PortManagerButton() {
+    // Open Port Manager in a new popup window
+    var width = Math.min(screen.availWidth, 1400);
+    var height = Math.min(screen.availHeight, 900);
+    var top = (screen.height - height) / 2;
+    var left = (screen.width - width) / 2;
+    
+    var portManagerWindow = window.open(
+        '/Tools/PortManager',
+        'PortManager',
+        'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + 
+        ',resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,status=no'
+    );
+    
+    if (portManagerWindow) {
+        portManagerWindow.focus();
+    }
+}
+</script>
+
+<!-- Add Port Manager button to the toolbar -->
+<div class='nav-item PortManagerButton util'>
+    <a href='#' onclick='PortManagerButton();return false;' title="Port Manager">
+        <b class='icon-u-network system'></b>
+        <span>Ports</span>
+    </a>
+</div>

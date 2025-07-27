@@ -10,10 +10,32 @@ class PortScanner {
     
     public function getAllPorts() {
         $ports = array();
+        $usedPorts = array(); // Track used ports to avoid duplicates
         
+        // Get Docker ports first (highest priority)
         $ports['docker'] = $this->getDockerPorts();
+        foreach ($ports['docker'] as $port) {
+            $portKey = $port['host_ip'] . ':' . $port['host_port'] . '/' . $port['protocol'];
+            $usedPorts[$portKey] = true;
+        }
+        
+        // Get VM ports second
         $ports['vms'] = $this->getVMPorts();
-        $ports['system'] = $this->getSystemPorts();
+        foreach ($ports['vms'] as $port) {
+            $portKey = $port['host_ip'] . ':' . $port['host_port'] . '/' . $port['protocol'];
+            $usedPorts[$portKey] = true;
+        }
+        
+        // Get system ports last and filter out duplicates
+        $systemPorts = $this->getSystemPorts();
+        $ports['system'] = array();
+        foreach ($systemPorts as $port) {
+            $portKey = $port['host_ip'] . ':' . $port['host_port'] . '/' . $port['protocol'];
+            // Only add if not already used by Docker or VM
+            if (!isset($usedPorts[$portKey])) {
+                $ports['system'][] = $port;
+            }
+        }
         
         return $ports;
     }
@@ -192,7 +214,7 @@ class PortScanner {
         return "Port $port";
     }
     
-    public function suggestPort($startPort = 8080, $endPort = 9999) {
+    public function suggestPort($startPort = 5000, $endPort = 9999) {
         $usedPorts = array();
         $allPorts = $this->getAllPorts();
         
@@ -203,12 +225,18 @@ class PortScanner {
         }
         
         $usedPorts = array_unique($usedPorts);
-        sort($usedPorts);
         
+        // Create array of available ports
+        $availablePorts = array();
         for ($port = $startPort; $port <= $endPort; $port++) {
             if (!in_array($port, $usedPorts)) {
-                return $port;
+                $availablePorts[] = $port;
             }
+        }
+        
+        // Return random available port if any exist
+        if (!empty($availablePorts)) {
+            return $availablePorts[array_rand($availablePorts)];
         }
         
         return null;

@@ -2,16 +2,29 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "port-manager">
 <!ENTITY author    "Nathan Sanders">
-<!ENTITY version   "2025.07.27k">
+<!ENTITY version   "2025.07.27n">
 <!ENTITY launch    "Tools/PortManager">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
-<!ENTITY md5       "956d4ecb7ff878d75b8c6d7b11777b06">
+<!ENTITY md5       "0018c38abb7dc27a4487dc34589e32e6">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0">
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="hexagon-nodes-solid-full" support="https://github.com/pysanders/unraid-port-manager/issues" min="6.9.0">
 
 <CHANGES>
+###2025.07.27n
+- Fixed plugin metadata and icon display
+- Added proper plugin description
+- Updated to use custom hexagon-nodes icon
+
+###2025.07.27m
+- Added toolbar button for quick access
+- Auto-loading ports on page open
+- Smart port suggestion (5000-9999 range)
+- Duplicate port removal (Docker priority)
+- Fixed search functionality
+- Popup window support
+
 ###2025.07.27
 - Initial release
 - Port scanning for Docker containers, VMs, and system services
@@ -22,9 +35,21 @@
 
 <!--
 Port Manager Plugin for Unraid
+
 This plugin provides a comprehensive view of all ports in use across your Unraid system,
-including Docker containers, VMs, and system services. It includes search functionality
-and can suggest available ports for new applications.
+including Docker containers, VMs, and system services. 
+
+Features:
+- Real-time port monitoring across Docker, VMs, and system services
+- Advanced search and filtering capabilities
+- Smart port suggestion for new applications (5000-9999 range)
+- Duplicate port detection and removal
+- Quick access via toolbar button
+- Tools menu integration
+
+The plugin helps administrators easily identify port conflicts, find available ports
+for new services, and maintain a clear overview of network port usage across their
+entire Unraid system.
 -->
 
 <FILE Run="/bin/bash">
