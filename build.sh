@@ -4,7 +4,7 @@
 # Creates a Slackware-compatible package for Unraid
 
 PLUGIN_NAME="port-manager"
-VERSION="2025.07.27e"
+VERSION="2025.07.27h"
 ARCH="x86_64"
 BUILD="1"
 

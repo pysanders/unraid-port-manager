@@ -2,14 +2,14 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "port-manager">
 <!ENTITY author    "Nathan Sanders">
-<!ENTITY version   "2025.07.27e">
+<!ENTITY version   "2025.07.27h">
 <!ENTITY launch    "Tools/PortManager">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
-<!ENTITY md5       "b7fbec9c010fa22b303b6b2840d0aefe">
+<!ENTITY md5       "9db106eb68b4d8d620c83c39c31ab672">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="ports" min="6.9.0">
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" min="6.9.0">
 
 <CHANGES>
 ###2025.07.27
@@ -37,7 +37,7 @@ rm -f $(ls /boot/config/plugins/&name;/&name;*.txz 2>/dev/null|head -n -1)
 <!--
 The 'source' file.
 -->
-<FILE Name="/boot/config/plugins/&name;/&name;-&version;-x86_64-1.txz" Run="upgradepkg --install-new">
+<FILE Name="/boot/config/plugins/&name;/&name;-&version;-x86_64-1.txz">
 <URL>&gitURL;/&name;-&version;-x86_64-1.txz</URL>
 <MD5>&md5;</MD5>
 </FILE>
@@ -47,6 +47,13 @@ The 'post-install' script
 -->
 <FILE Run="/bin/bash">
 <INLINE>
+upgradepkg --install-new /boot/config/plugins/&name;/&name;-&version;-x86_64-1.txz
+
+# cleanup old versions
+rm -f $(ls /boot/config/plugins/&name;/&name;-*.txz 2>/dev/null | grep -v '&version;')
+
+echo "VERSION=&version;" > /usr/local/emhttp/plugins/&name;/version.ini
+
 echo ""
 echo "----------------------------------------------------"
 echo " &name; has been installed."
@@ -62,7 +69,8 @@ The 'remove' script.
 -->
 <FILE Run="/bin/bash" Method="remove">
 <INLINE>
-removepkg &name;-&version;-x86_64-1 --terse
+removepkg &name;
+
 rm -rf /usr/local/emhttp/plugins/&name;
 rm -rf /boot/config/plugins/&name;
 

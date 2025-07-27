@@ -1,21 +1,21 @@
 Menu="Tools:Unraid OS"
 Title="Port Manager"
-Icon="hexagon-nodes-solid-full"
+Icon="network-wired"
 ---
 <?PHP
-/* Copyright 2025, Nathan Sanders.
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License version 2,
- * as published by the Free Software Foundation.
- */
+/* Copyright 2025, Nathan Sanders. */
 require_once 'include/port_scanner.php';
 $scanner = new PortScanner();
 ?>
 
-<div class="port-manager-container" style="padding: 20px; max-width: 1200px; margin: 0 auto;">
+<div style="padding: 20px; max-width: 1200px; margin: 0 auto;">
     <h1>Port Manager</h1>
     <p>View and manage all ports in use across your Unraid system including Docker containers, VMs, and system services.</p>
+    
+    <div style="background: #f0f0f0; padding: 10px; margin: 10px 0; border-radius: 4px;">
+        <strong>Debug:</strong> Plugin loaded successfully. Current time: <?= date('Y-m-d H:i:s') ?><br>
+        <a href="api.php?action=getAllPorts" target="_blank">Test API endpoint</a>
+    </div>
     
     <div class="stats-container" style="display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
         <div class="stat-card" style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); flex: 1; min-width: 150px; text-align: center;">
@@ -59,6 +59,10 @@ let allPorts = [];
 let filteredPorts = [];
 
 document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('js-status').textContent = 'JavaScript loaded successfully';
+    document.getElementById('js-status').style.color = 'green';
+    
+    console.log('Port Manager: DOM loaded, starting initialization...');
     loadPorts();
     
     document.getElementById('search-input').addEventListener('input', filterPorts);
@@ -66,9 +70,14 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function loadPorts() {
-    fetch('/plugins/port-manager/api.php?action=getAllPorts')
-        .then(response => response.json())
+    console.log('Loading ports...');
+    fetch('api.php?action=getAllPorts')
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
         .then(data => {
+            console.log('Data received:', data);
             allPorts = [];
             
             if (data.docker) {
@@ -86,8 +95,9 @@ function loadPorts() {
         })
         .catch(error => {
             console.error('Error loading ports:', error);
+            console.error('Full error details:', error);
             document.getElementById('ports-content').innerHTML = 
-                '<div style="text-align: center; padding: 40px; color: #999;">Error loading port information. Please try refreshing the page.</div>';
+                '<div style="text-align: center; padding: 40px; color: #999;">Error loading port information: ' + error.message + '<br>Check console for details.</div>';
         });
 }
 
@@ -190,7 +200,7 @@ function suggestPort() {
     const endPort = prompt('End port range (default: 9999):', '9999');
     
     if (startPort && endPort) {
-        fetch('/plugins/port-manager/api.php?action=suggestPort&start=' + startPort + '&end=' + endPort)
+        fetch('api.php?action=suggestPort&start=' + startPort + '&end=' + endPort)
             .then(response => response.json())
             .then(data => {
                 const resultElement = document.getElementById('suggested-port-result');

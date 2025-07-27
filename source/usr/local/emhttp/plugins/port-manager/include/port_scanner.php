@@ -20,6 +20,7 @@ class PortScanner {
     
     public function getDockerPorts() {
         $dockerPorts = array();
+        $seenPorts = array();
         
         exec("docker ps --format 'table {{.Names}}\t{{.Ports}}' --no-trunc", $output);
         
@@ -38,25 +39,33 @@ class PortScanner {
             
             foreach ($portMappings as $mapping) {
                 if (preg_match('/(\d+\.\d+\.\d+\.\d+):(\d+)->(\d+)\/(\w+)/', $mapping, $matches)) {
-                    $dockerPorts[] = array(
-                        'service' => $containerName,
-                        'type' => 'docker',
-                        'host_ip' => $matches[1],
-                        'host_port' => $matches[2],
-                        'container_port' => $matches[3],
-                        'protocol' => $matches[4],
-                        'status' => 'active'
-                    );
+                    $portKey = $matches[1] . ':' . $matches[2] . '/' . $matches[4];
+                    if (!isset($seenPorts[$portKey])) {
+                        $dockerPorts[] = array(
+                            'service' => $containerName,
+                            'type' => 'docker',
+                            'host_ip' => $matches[1],
+                            'host_port' => $matches[2],
+                            'container_port' => $matches[3],
+                            'protocol' => $matches[4],
+                            'status' => 'active'
+                        );
+                        $seenPorts[$portKey] = true;
+                    }
                 } elseif (preg_match('/(\d+)->(\d+)\/(\w+)/', $mapping, $matches)) {
-                    $dockerPorts[] = array(
-                        'service' => $containerName,
-                        'type' => 'docker',
-                        'host_ip' => '0.0.0.0',
-                        'host_port' => $matches[1],
-                        'container_port' => $matches[2],
-                        'protocol' => $matches[3],
-                        'status' => 'active'
-                    );
+                    $portKey = '0.0.0.0:' . $matches[1] . '/' . $matches[3];
+                    if (!isset($seenPorts[$portKey])) {
+                        $dockerPorts[] = array(
+                            'service' => $containerName,
+                            'type' => 'docker',
+                            'host_ip' => '0.0.0.0',
+                            'host_port' => $matches[1],
+                            'container_port' => $matches[2],
+                            'protocol' => $matches[3],
+                            'status' => 'active'
+                        );
+                        $seenPorts[$portKey] = true;
+                    }
                 }
             }
         }
