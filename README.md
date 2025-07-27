@@ -22,7 +22,7 @@ A comprehensive port management plugin for Unraid that displays all ports in use
 ### Method 2: Manual Installation
 1. Go to **Plugins** in the Unraid webGui
 2. Click **Install Plugin**
-3. Enter the plugin URL: `https://raw.githubusercontent.com/nathansanders/unraid-port-manager/main/port-manager.plg`
+3. Enter the plugin URL: `https://raw.githubusercontent.com/pysanders/unraid-port-manager/refs/heads/main/port-manager.plg`
 4. Click **Install**
 
 ## Usage
@@ -96,7 +96,7 @@ If you encounter permission errors:
 ## Support
 
 For issues, feature requests, or contributions:
-- GitHub: https://github.com/nathansanders/unraid-port-manager
+- GitHub: https://github.com/pysanders/unraid-port-manager
 - Unraid Forums: Search for "Port Manager Plugin"
 
 ## License
