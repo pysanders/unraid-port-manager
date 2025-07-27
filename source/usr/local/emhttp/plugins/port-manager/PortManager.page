@@ -1,4 +1,6 @@
+Menu="PortManager"
 Title="Port Manager"
+Icon="network"
 ---
 <?PHP
 /* Copyright 2025, Nathan Sanders. */

@@ -2,20 +2,27 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "port-manager">
 <!ENTITY author    "Nathan Sanders">
-<!ENTITY version   "2025.07.27r">
-<!ENTITY launch    "Tools/PortManager">
+<!ENTITY version   "2025.07.27s">
+<!ENTITY launch    "Settings/PortManager">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
-<!ENTITY md5       "e11153f5c9837f0b903580d5a4b1edea">
+<!ENTITY md5       "5880f931d08d3d2eb09f9ae506ed433f">
 ]>
 
-<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="fa-hexagon-nodes" support="https://github.com/pysanders/unraid-port-manager/issues" min="6.9.0">
+<PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="network" support="https://github.com/pysanders/unraid-port-manager/issues" min="6.9.0">
 
 <DESCRIPTION>
 A comprehensive port management plugin that displays all ports in use across your Unraid system including Docker containers, VMs, and system services. Features search functionality and port suggestion capabilities.
 </DESCRIPTION>
 
 <CHANGES>
+###2025.07.27s
+- Moved plugin to Settings menu instead of Tools
+- Changed launch path to Settings/PortManager
+- Updated icons to use standard "network" icon
+- Fixed toolbar button to open Settings page
+- Added proper Menu declaration to page
+
 ###2025.07.27r
 - Removed Tools page icon to eliminate empty section
 - Fixed plugin icon to use fa-hexagon-nodes FontAwesome icon

@@ -8,7 +8,7 @@ function PortManagerButton() {
     var left = (screen.width - width) / 2;
     
     var portManagerWindow = window.open(
-        '/Tools/PortManager',
+        '/Settings/PortManager',
         'PortManager',
         'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + 
         ',resizable=yes,scrollbars=yes,toolbar=no,menubar=no,location=no,status=no'
@@ -20,6 +20,6 @@ function PortManagerButton() {
 }
 
 $(function() {
-    $('.nav-tile.right').prepend('<div class="nav-item PortManagerButton util"><a href="#" onclick="PortManagerButton();return false;" title="Port Manager"><i class="fa fa-hexagon-nodes"></i><span>Ports</span></a></div>');
+    $('.nav-tile.right').prepend('<div class="nav-item PortManagerButton util"><a href="#" onclick="PortManagerButton();return false;" title="Port Manager"><i class="fa fa-network-wired"></i><span>Ports</span></a></div>');
 });
 </script>
