@@ -1,4 +1,5 @@
 Menu="Tools:Unraid OS"
 Title="Port Manager"
-Icon="hexagon-nodes-solid-full"
+Icon="fa-network-wired"
 ---
+<?require_once '/usr/local/emhttp/plugins/port-manager/PortManager.page';?>

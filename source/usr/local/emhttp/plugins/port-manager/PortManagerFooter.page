@@ -1,15 +1,3 @@
-<!--
-##############################
-plugins/port-manager/PortManagerFooter.page  
-##############################
--->
-
-<style>
-.nav-item.PortManagerButton {
-    display: inline-block;
-}
-</style>
-
 <script>
 function PortManagerButton() {
     // Open Port Manager in a new popup window
@@ -29,12 +17,8 @@ function PortManagerButton() {
         portManagerWindow.focus();
     }
 }
-</script>
 
-<!-- Add Port Manager button to the toolbar -->
-<div class='nav-item PortManagerButton util'>
-    <a href='#' onclick='PortManagerButton();return false;' title="Port Manager">
-        <b class='icon-u-network system'></b>
-        <span>Ports</span>
-    </a>
-</div>
+$(function() {
+    $('.nav-tile.right').prepend('<div class="nav-item PortManagerButton util"><a href="#" onclick="PortManagerButton();return false;" title="Port Manager"><i class="fa fa-hexagon-nodes"></i><span>Ports</span></a></div>');
+});
+</script>

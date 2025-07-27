@@ -2,16 +2,22 @@
 <!DOCTYPE PLUGIN [
 <!ENTITY name      "port-manager">
 <!ENTITY author    "Nathan Sanders">
-<!ENTITY version   "2025.07.27n">
+<!ENTITY version   "2025.07.27o">
 <!ENTITY launch    "Tools/PortManager">
 <!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
-<!ENTITY md5       "0018c38abb7dc27a4487dc34589e32e6">
+<!ENTITY md5       "28aa30d2dd31f0522232fc920f14acc5">
 ]>
 
 <PLUGIN name="&name;" author="&author;" version="&version;" launch="&launch;" pluginURL="&pluginURL;" icon="hexagon-nodes-solid-full" support="https://github.com/pysanders/unraid-port-manager/issues" min="6.9.0">
 
 <CHANGES>
+###2025.07.27o
+- Fixed toolbar button integration 
+- Updated footer page structure for proper loading
+- Changed to standard FontAwesome icons for better compatibility
+- Fixed Tools menu icon display
+
 ###2025.07.27n
 - Fixed plugin metadata and icon display
 - Added proper plugin description
