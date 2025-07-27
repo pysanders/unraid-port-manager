@@ -4,7 +4,7 @@
 <!ENTITY author    "Nathan Sanders">
 <!ENTITY version   "2025.07.27">
 <!ENTITY launch    "Settings/PortManager">
-<!ENTITY gitURL    "https://raw.githubusercontent.com/nathansanders/unraid-port-manager/main">
+<!ENTITY gitURL    "https://raw.githubusercontent.com/pysanders/unraid-port-manager/main">
 <!ENTITY pluginURL "&gitURL;/port-manager.plg">
 <!ENTITY md5       "$(cat &name;.txz | md5sum | cut -d' ' -f1)">
 ]>
