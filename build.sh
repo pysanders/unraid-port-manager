@@ -32,9 +32,9 @@ ${PLUGIN_NAME}:
 ${PLUGIN_NAME}:
 EOF
 
-# Create the package
+# Create the package using xz compression (Slackware format)
 cd package
-tar -czf ../${PLUGIN_NAME}-${VERSION}-${ARCH}-${BUILD}.txz *
+tar --create --xz --file ../${PLUGIN_NAME}-${VERSION}-${ARCH}-${BUILD}.txz *
 cd ..
 
 # Generate MD5 checksum
